@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: SpringBootApplicationDemo
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Rounak-LTPL
+Implementation-Vendor-Id: com.pp
+Build-Jdk: 1.8.0_241
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/SpringBootApplicationDemo
+Created-By: Maven Integration for Eclipse
+
