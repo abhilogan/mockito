@@ -3,32 +3,23 @@ package com.pp.controller;
 import com.pp.repositary.WebServiceModel;
 import com.pp.repositary.WebServiceRepository;
 import com.pp.service.WebSrvService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import  static org.hamcrest.MatcherAssert.*;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebControllerTest {
-
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-//    @InjectMocks
-//    private WebServiceController webServiceController;
 
     @InjectMocks
     private WebSrvService webSrvService;
@@ -44,9 +35,9 @@ public class WebControllerTest {
 		        model.setUmail("jacky@gmail.com");
 		        model.setUpassword("jacky12334");
 
-        when(webServiceRepository.save(model)).thenReturn(model);
+        when(webSrvService.saveRecord(model)).thenReturn(model);
 
-        WebServiceModel model1 = webSrvService.saveRecord(model);
+        WebServiceModel model1 = webServiceRepository.save(model);
 
         assertThat(model1.getUname()).isEqualTo(model.getUname());
         assertThat(model1.getUmail()).isEqualTo(model.getUmail());
@@ -87,32 +78,48 @@ public class WebControllerTest {
                 .isEqualTo(model1.getUname());
     }
 
-//    @Test
-//    public void testFindById()
-//    {
-//        // given
-//        WebServiceModel model = new WebServiceModel();
-//        model.setUid(1);
-//        model.setUname("Lokesh");
-//        model.setUmail("howtodoinjava@gmail.com");
-//        model.setUpassword("1234");
-//
-//        WebServiceModel model1 = new WebServiceModel();
-//        model1.setUid(2);
-//        model1.setUname("Lokesh1");
-//        model1.setUmail("howtodoinjava1@gmail.com");
-//        model1.setUpassword("12345");
-//
-//        WebServiceModel model2= new WebServiceModel();
-//
-//        List<WebServiceModel> list = new ArrayList<WebServiceModel>();
-//        list.add(model);
-//        list.add(model1);
-//
-//
-//        when(webServiceRepository.findById(1)).thenAnswer(list);
+    @Test
+    public void testFindById()
+    {
+        // given
+        WebServiceModel model = new WebServiceModel();
+        model.setUid(1);
+        model.setUname("Lokesh");
+        model.setUmail("howtodoinjava@gmail.com");
+        model.setUpassword("1234");
 
+        WebServiceModel model1 = new WebServiceModel();
+        model1.setUid(2);
+        model1.setUname("Lokesh1");
+        model1.setUmail("howtodoinjava1@gmail.com");
+        model1.setUpassword("12345");
 
-//            }
+        WebServiceModel model2= new WebServiceModel();
+
+        List<WebServiceModel> list = new ArrayList<WebServiceModel>();
+        list.add(model);
+        list.add(model1);
+
+        when(webSrvService.getRecordById(any(Integer.TYPE))).thenReturn(Optional.of(model));
+
+        assertEquals(model,webServiceRepository.findById(1).get());
+        assertEquals(model.getUname(),webServiceRepository.findById(1).get().getUname());
+
+            }
+
+            @Test
+            public void delete()
+            {
+                WebServiceModel model = new WebServiceModel();
+                model.setUid(1);
+                model.setUname("Lokesh");
+                model.setUmail("howtodoinjava@gmail.com");
+                model.setUpassword("1234");
+
+                when(webServiceRepository.findById(any(Integer.TYPE))).thenReturn(Optional.of(model));
+                webSrvService.deleteRecord(1);
+
+                verify(webServiceRepository,timeout(1)).deleteById(1);
+            }
 
 }
